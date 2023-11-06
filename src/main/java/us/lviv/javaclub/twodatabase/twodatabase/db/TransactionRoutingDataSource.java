@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 public class TransactionRoutingDataSource extends AbstractRoutingDataSource {
-  private static final ThreadLocal<DataSourceType> currentDataSource = new ThreadLocal<>();
+  private static final ThreadLocal<DataSourceType> CURRENT_DATA_SOURCE = new ThreadLocal<>();
 
   public TransactionRoutingDataSource(@NonNull final DataSource master, @NonNull final DataSource slave) {
     final Map<Object, Object> dataSources = new HashMap<>();
@@ -21,20 +21,24 @@ public class TransactionRoutingDataSource extends AbstractRoutingDataSource {
   }
 
   static boolean isCurrentlyReadonly() {
-    return currentDataSource.get() == DataSourceType.READ_ONLY;
+    return CURRENT_DATA_SOURCE.get() == DataSourceType.READ_ONLY;
   }
 
-  static void setReadonlyDataSource(boolean isReadonly) {
-    currentDataSource.set(isReadonly ? DataSourceType.READ_ONLY : DataSourceType.READ_WRITE);
+  static void setReadonlyDataSource(@NonNull boolean isReadonly) {
+    CURRENT_DATA_SOURCE.set(isReadonly ? DataSourceType.READ_ONLY : DataSourceType.READ_WRITE);
   }
 
+  public static void unload() {
+    CURRENT_DATA_SOURCE.remove();
+  }
+  
   @Override
   protected Object determineCurrentLookupKey() {
-    return currentDataSource.get();
+    return CURRENT_DATA_SOURCE.get();
   }
 
   private enum DataSourceType {
     READ_ONLY,
-    READ_WRITE;
+    READ_WRITE
   }
 }

@@ -1,82 +1,51 @@
 package us.lviv.javaclub.twodatabase.twodatabase.db;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel;
+import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
+
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-
-import jakarta.persistence.EntityManagerFactory;
-import net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel;
-import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener;
-import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
-import us.lviv.javaclub.twodatabase.twodatabase.ReplicaAwareTransactionManager;
+import org.springframework.lang.NonNull;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableConfigurationProperties({DatabaseMasterProperties.class, DatabaseSlaveProperties.class})
 public class DatabaseConfig {
-
-  @Value("${db.master.url}")
-  private String masterUrl;
-
-  @Value("${db.master.username}")
-  private String masterUsername;
-
-  @Value("${db.master.password}")
-  private String masterPassword;
 
   @Bean
   @FlywayDataSource
-  public DataSource readWriteConfiguration() {
+  public DataSource readWriteConfiguration(@NonNull final DatabaseMasterProperties databaseMasterProperties) {
     return DataSourceBuilder.create()
-        .url(masterUrl)
-        .username(masterUsername)
-        .password(masterPassword)
+        .url(databaseMasterProperties.getUrl())
+        .username(databaseMasterProperties.getUsername())
+        .password(databaseMasterProperties.getPassword())
         .build();
   }
 
-  @Value("${db.slave.url}")
-  private String slaveUrl;
-
-  @Value("${db.slave.username}")
-  private String slaveUsername;
-
-  @Value("${db.slave.password}")
-  private String slavePassword;
-
   @Bean
-  public DataSource readOnlyConfiguration() {
+  public DataSource readOnlyConfiguration(@NonNull final DatabaseSlaveProperties databaseSlaveProperties) {
     return DataSourceBuilder.create()
-        .url(slaveUrl)
-        .username(slaveUsername)
-        .password(slavePassword)
+        .url(databaseSlaveProperties.getUrl())
+        .username(databaseSlaveProperties.getUsername())
+        .password(databaseSlaveProperties.getPassword())
         .build();
   }
 
   @Bean
   @Primary
-  public DataSource routingDataSource() {
+  public DataSource routingDataSource(@NonNull final DatabaseMasterProperties databaseMasterProperties,
+                                      @NonNull final DatabaseSlaveProperties databaseSlaveProperties) {
     return new TransactionRoutingDataSource(
-        loggingProxy("readWrite", readWriteConfiguration()),
-        loggingProxy("readOnly", readOnlyConfiguration()));
+        loggingProxy("readWrite", readWriteConfiguration(databaseMasterProperties)),
+        loggingProxy("readOnly", readOnlyConfiguration(databaseSlaveProperties)));
   }
 
-  @Bean
-  @Primary
-  public PlatformTransactionManager transactionManager(@Qualifier("jpaTxManager") PlatformTransactionManager wrapped) {
-    return new ReplicaAwareTransactionManager(wrapped);
-  }
-
-  @Bean(name = "jpaTxManager")
-  public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory emf) {
-    return new JpaTransactionManager(emf);
-  }
-  
   private DataSource loggingProxy(String name, DataSource dataSource) {
     final SLF4JQueryLoggingListener loggingListener = new SLF4JQueryLoggingListener();
     loggingListener.setLogLevel(SLF4JLogLevel.INFO);
