@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.5'
 	id 'io.spring.dependency-management' version '1.1.3'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'us.lviv.javaclub.two-database'
@@ -21,9 +22,15 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'net.ttddyy:datasource-proxy:1.8.1'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
 	compileOnly 'org.projectlombok:lombok'
@@ -31,8 +38,15 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 tasks.named('test') {
+	outputs.dir snippetsDir
 	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
 }

@@ -9,5 +9,4 @@ public class TwoDatabaseApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TwoDatabaseApplication.class, args);
 	}
-
 }

@@ -1,0 +1,14 @@
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "JavaClub Lviv"
+}
+
+###
+GET http://localhost:8080/users
+
+###
+GET http://localhost:8080/users/1
+
