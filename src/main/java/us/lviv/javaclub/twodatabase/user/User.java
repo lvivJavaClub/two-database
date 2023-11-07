@@ -1,5 +1,6 @@
-package us.lviv.javaclub.twodatabase.twodatabase.user;
+package us.lviv.javaclub.twodatabase.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +13,7 @@ import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
-@Entity(name = "my_user")
+@Entity(name = "user")
 @Builder
 @Getter
 @Setter
@@ -23,5 +24,6 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String username;
+  @Column(name = "created_at")
   private OffsetDateTime createdAt;
 }

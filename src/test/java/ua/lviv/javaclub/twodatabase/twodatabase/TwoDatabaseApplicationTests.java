@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase;
+package ua.lviv.javaclub.twodatabase.twodatabase;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

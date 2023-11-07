@@ -11,8 +11,8 @@ services:
       - ./master.cnf:/etc/my.cnf
     environment:
       - MYSQL_ROOT_PASSWORD=S3cret
-      - MYSQL_USER=my_db_user
-      - MYSQL_DATABASE=my_db
+      - MYSQL_USER=db_user
+      - MYSQL_DATABASE=my_db_users
       - MYSQL_PASSWORD=S3cret
     networks:
       - mynetwork
@@ -29,11 +29,24 @@ services:
       - ./slave.cnf:/etc/my.cnf
     environment:
       - MYSQL_ROOT_PASSWORD=S3cret
-      - MYSQL_USER=my_db_user
-      - MYSQL_DATABASE=my_db
+      - MYSQL_USER=db_user
+      - MYSQL_DATABASE=my_db_users
       - MYSQL_PASSWORD=S3cret
     networks:
       - mynetwork
+  database_todo:
+    image: mysql:8.0.30
+    container_name: "database_todo"
+    restart: unless-stopped
+    ports:
+      - 3308:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=S3cret
+      - MYSQL_USER=db_user
+      - MYSQL_DATABASE=my_db_todos
+      - MYSQL_PASSWORD=S3cret
+    volumes:
+      - "./init_todo.sql:/docker-entrypoint-initdb.d/1.sql"
 networks:
   mynetwork:
 volumes:

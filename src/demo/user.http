@@ -12,3 +12,16 @@ GET http://localhost:8080/users
 ###
 GET http://localhost:8080/users/1
 
+###
+POST http://localhost:8080/todos
+Content-Type: application/json
+
+{
+  "text": "Demo JavaClub Lviv"
+}
+
+###
+GET http://localhost:8080/todos
+
+###
+GET http://localhost:8080/todos/1

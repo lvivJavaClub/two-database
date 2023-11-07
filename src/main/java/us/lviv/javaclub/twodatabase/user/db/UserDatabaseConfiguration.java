@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase.db;
+package us.lviv.javaclub.twodatabase.user.db;
 
 import net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel;
 import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener;
@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableConfigurationProperties({DatabaseMasterProperties.class, DatabaseSlaveProperties.class})
-public class DatabaseConfig {
+public class UserDatabaseConfiguration {
 
   @Bean
   @FlywayDataSource
@@ -42,8 +42,8 @@ public class DatabaseConfig {
   public DataSource routingDataSource(@NonNull final DatabaseMasterProperties databaseMasterProperties,
                                       @NonNull final DatabaseSlaveProperties databaseSlaveProperties) {
     return new TransactionRoutingDataSource(
-        loggingProxy("readWrite", readWriteConfiguration(databaseMasterProperties)),
-        loggingProxy("readOnly", readOnlyConfiguration(databaseSlaveProperties)));
+        loggingProxy("ReadWrite", readWriteConfiguration(databaseMasterProperties)),
+        loggingProxy("ReadOnly", readOnlyConfiguration(databaseSlaveProperties)));
   }
 
   private DataSource loggingProxy(String name, DataSource dataSource) {

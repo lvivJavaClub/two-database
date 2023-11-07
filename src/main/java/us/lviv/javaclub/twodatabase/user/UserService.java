@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase.user;
+package us.lviv.javaclub.twodatabase.user;
 
 import lombok.RequiredArgsConstructor;
 
@@ -6,8 +6,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -19,6 +19,7 @@ public class UserService {
   public void create(@NonNull final UserDto userDto) {
     userRepository.save(User.builder()
         .username(userDto.getUsername())
+        .createdAt(OffsetDateTime.now())
         .build());
   }
 

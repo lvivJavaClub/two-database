@@ -1,8 +1,8 @@
-package us.lviv.javaclub.twodatabase.twodatabase.user;
+package us.lviv.javaclub.twodatabase.todo;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface TodoRepository extends CrudRepository<Todo, Long> {
 }

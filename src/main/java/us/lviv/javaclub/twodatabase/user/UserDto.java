@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase.user;
+package us.lviv.javaclub.twodatabase.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

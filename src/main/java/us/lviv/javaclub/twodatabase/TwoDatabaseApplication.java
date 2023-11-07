@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase;
+package us.lviv.javaclub.twodatabase;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

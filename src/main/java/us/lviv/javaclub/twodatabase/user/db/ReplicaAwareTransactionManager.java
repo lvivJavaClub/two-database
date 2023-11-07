@@ -1,4 +1,4 @@
-package us.lviv.javaclub.twodatabase.twodatabase.db;
+package us.lviv.javaclub.twodatabase.user.db;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

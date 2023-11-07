@@ -1,6 +1,5 @@
-package us.lviv.javaclub.twodatabase.twodatabase.user;
+package us.lviv.javaclub.twodatabase.user;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ResponseStatus;
